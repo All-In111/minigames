@@ -27,8 +27,6 @@ public class WildWestRunnerControllerPlayer : MonoBehaviour {
 	private bool potencialJump = false;
 	//[Tooltip("Var Save Player is NoTouch")]
 	private bool potencialNoTouch = false;
-	//[Tooltip("Var Save Posible Contact Again With PowerUp")]
-	private bool noContactPower = false;
 	//[Tooltip("Var Save Posible Contact Again With Finish")]
 	private bool noContactFinish = false;
 	private bool notMoveRight = false;
@@ -185,8 +183,6 @@ public class WildWestRunnerControllerPlayer : MonoBehaviour {
 	//****************************************************************************************COROUTINE
 	private IEnumerator AnimationPlay(animationState state){
 		float waitTime = 0;
-		AnimatorTransitionInfo animTransInfo;
-		AnimatorClipInfo[] animClipInfo;
 		switch (state) {
 		case animationState.Jump:
 			rbd.useGravity = false;
@@ -197,8 +193,8 @@ public class WildWestRunnerControllerPlayer : MonoBehaviour {
 				}
 			}
 			movement.y = 1 * speedJump;
-			Debug.Log ("Fuerza salto: " + rbd.velocity);
 			animController.SetTrigger ("Jump");
+			Debug.Log ("Velocity: " + rbd.velocity);
 			yield return new WaitForSecondsRealtime (waitTime * waitingTimeJump);
 			movement.y = gravity;
 			yield return new WaitForSecondsRealtime ((waitTime  - (waitTime * waitingTimeJump)));
@@ -229,8 +225,6 @@ public class WildWestRunnerControllerPlayer : MonoBehaviour {
 			yield return new WaitForSecondsRealtime (4);
 			WildWestRunnerManager.instance.endGame (IMiniGame.MiniGameResult.LOSE);
 			break;
-			Debug.LogError ("STATE NOT FOUND");
-			break;
 		}
 	}
 
@@ -238,7 +232,7 @@ public class WildWestRunnerControllerPlayer : MonoBehaviour {
 		yield return new WaitForSecondsRealtime (0.2f);
 		switch (state) {
 		case noContactState.Power:
-			noContactPower = false;
+
 			break;
 		case noContactState.Finish:
 			noContactFinish = false;
@@ -261,6 +255,7 @@ public class WildWestRunnerControllerPlayer : MonoBehaviour {
 	private IEnumerator potentionJump(float waitTimeEffect, int multiplierJump){
 		potencialJump = true;
 		speedJump = speedJump * multiplierJump;
+		Debug.Log ("SpeedJump: " + speedJump);
 		waitingTimeJump = 0.05f;
 		yield return new WaitForSecondsRealtime (waitTimeEffect);
 		potencialJump = false;
@@ -280,5 +275,9 @@ public class WildWestRunnerControllerPlayer : MonoBehaviour {
 	//****************************************************************************************GETTERS
 	public float getSpeedMovement(){
 		return speedMovement;
+	}
+
+	public void addSpeed(int addingSpeed){
+		speedMovement += addingSpeed;
 	}
 }
